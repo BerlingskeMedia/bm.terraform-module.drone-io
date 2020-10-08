@@ -17,3 +17,11 @@ output "access_key_arn" {
 output "access_key_value" {
   value = join("", aws_ssm_parameter.access_key.*.value)
 }
+
+output "access_key" {
+  value = join("", aws_iam_access_key.builder_key.*.id)
+}
+
+output "secret_key" {
+  value = join("", aws_iam_access_key.builder_key.*.secret)
+}
