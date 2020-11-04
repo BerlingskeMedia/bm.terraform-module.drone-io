@@ -1,4 +1,8 @@
 ---
+# 0.3.0
+# Main Changes
+    - Terraform v0.13.x support
+
 # 0.2.0
 # Main changes
     - add outputs `access_key` and `secret_key`, which returns simple strings, 
