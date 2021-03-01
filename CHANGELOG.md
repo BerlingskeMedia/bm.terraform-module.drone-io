@@ -1,4 +1,9 @@
 ---
+# 0.4.0
+# Main Changes
+    - Terraform v0.14.x support
+    - Aws provider 3.0 by default
+
 # 0.3.0
 # Main Changes
     - Terraform v0.13.x support
