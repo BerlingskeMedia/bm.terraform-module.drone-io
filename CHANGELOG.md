@@ -1,4 +1,10 @@
 ---
+# 0.5.0
+# Main Changes
+    - Add required permissions to run standalone tasks
+    - Due to security concern - restricted permissions for various 
+    actions to specific resources instead of global wildcard 
+
 # 0.4.0
 # Main Changes
     - Terraform v0.14.x support
