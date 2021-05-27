@@ -1,3 +1,14 @@
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
+module "label_original" {
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.24.1"
+  enabled   = var.enabled
+  namespace = var.namespace
+  stage     = var.stage
+  name      = var.name
+}
+
 module "label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.24.1"
   enabled    = var.enabled
@@ -45,25 +56,70 @@ data "aws_iam_policy_document" "permissions" {
 
     actions = [
       "ecr:BatchCheckLayerAvailability",
-      "ecr:CompleteLayerUpload",
       "ecr:GetAuthorizationToken",
-      "ecr:InitiateLayerUpload",
-      "ecr:PutImage",
-      "ecr:UploadLayerPart",
-      "ecs:RunTask",
-      "ecs:RegisterTaskDefinition",
-      "ecs:UpdateService",
       "iam:PassRole",
+      "ecs:RegisterTaskDefinition", # Required by AWS to be granted on resources: *
+    ]
+    effect = "Allow"
+    resources = [
+      "*",
+    ]
+  }
+
+  dynamic "statement" {
+    for_each = length(var.ecr_arns) > 0 ? ["true"] : []
+    content {
+      sid = "EcrPermissions"
+      actions = [
+        "ecr:CompleteLayerUpload",
+        "ecr:InitiateLayerUpload",
+        "ecr:PutImage",
+        "ecr:UploadLayerPart",
+      ]
+      effect    = "Allow"
+      resources = var.ecr_arns
+    }
+  }
+
+  statement {
+    sid = "DedicatedEcsPermissions"
+    actions = [
+      "ecs:DescribeTasks",
+      "ecs:StopTask",
+      "ecs:RunTask",
+      "ecs:UpdateService",
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task/${module.label_original.id}*",
+      "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:cluster/${module.label_original.id}",
+      "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${module.label_original.id}*",
+      "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:service/${module.label_original.id}*",
+    ]
+  }
+
+  statement {
+    sid = "LogsPermissions"
+    actions = [
       "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${module.label_original.id}*",
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${module.label_original.id}*:*",
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:destination:${module.label_original.id}*",
+    ]
+  }
+  statement {
+    sid = "ParametersPermissions"
+    actions = [
       "ssm:GetParameters",
     ]
-
     effect = "Allow"
-
     resources = [
-      "*",
+      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/drone/${module.label_original.id}/*",
     ]
   }
 }

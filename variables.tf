@@ -38,3 +38,9 @@ variable "enabled" {
   description = "Set to false to prevent the module from creating any resources"
   default     = true
 }
+
+variable "ecr_arns" {
+  type        = list(string)
+  description = "List of ECR ARNs to create permissions for. If empty list, no ECR permissions will be created for builder user"
+  default     = []
+}
