@@ -1,7 +1,7 @@
 ---
 # 0.5.1
 ## Main Changes
-    - Output builder username to have it when we need to apply policy outside of the module to it.
+    - Output builder username to have it when we need to apply policy outside of the module to it (ex. with `aws_iam_user_policy_attachment`).
 
 # 0.5.0
 ## Main Changes
