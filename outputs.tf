@@ -1,3 +1,7 @@
+output "builder_username" {
+  value = join("", aws_iam_user.builder.*.name)
+}
+
 output "secret_key_path" {
   value = join("", aws_ssm_parameter.secret_key.*.name)
 }
