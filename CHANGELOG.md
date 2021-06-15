@@ -1,21 +1,25 @@
 ---
+# 0.5.1
+## Main Changes
+    - Output builder username to have it when we need to apply policy outside of the module to it.
+
 # 0.5.0
-# Main Changes
+## Main Changes
     - Add required permissions to run standalone tasks
     - Due to security concern - restricted permissions for various 
     actions to specific resources instead of global wildcard 
 
 # 0.4.0
-# Main Changes
+## Main Changes
     - Terraform v0.14.x support
     - Aws provider 3.0 by default
 
 # 0.3.0
-# Main Changes
+## Main Changes
     - Terraform v0.13.x support
 
 # 0.2.0
-# Main changes
+## Main changes
     - add outputs `access_key` and `secret_key`, which returns simple strings, 
         instead of fetching data of resources, created inside this module (it's stupid). 
         However leaving old outputs in terms of backward compability.
