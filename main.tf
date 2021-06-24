@@ -59,6 +59,8 @@ data "aws_iam_policy_document" "permissions" {
       "ecr:GetAuthorizationToken",
       "iam:PassRole",
       "ecs:RegisterTaskDefinition", # Required by AWS to be granted on resources: *
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
     ]
     effect = "Allow"
     resources = [
@@ -173,4 +175,3 @@ resource "aws_ssm_parameter" "access_key" {
   )
   tags = var.tags
 }
-

@@ -1,4 +1,8 @@
 ---
+# 0.7.0
+## Main Changes
+    - Add permissions to fetch images from any ECR.
+
 # 0.6.0
 ## Main Changes
     - Output builder username to have it when we need to apply policy outside of the module to it (ex. with `aws_iam_user_policy_attachment`).
